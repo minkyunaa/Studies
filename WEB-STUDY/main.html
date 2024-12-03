@@ -1,35 +1,132 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <!--BootStrap codes-->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Documents</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"
+    integrity="sha384-zYPOMqeu1DAVkHiLqWBUTcbYfZ8osu1Nd6Z89ify25QV9guujx43ITvfi12/QExE"
+    crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.min.js"
+    integrity="sha384-Y4oOpwW3duJdCWv5ly8SCFYWqFDsfob/3GkgExXKV4idmbt98QcxXYs9UoXAB7BZ"
+    crossorigin="anonymous"></script>
+
+
+    <!--Link my CSS File-->
+    <link rel="stylesheet" href="./aaa.css">
+
+    <!--Link Fonts-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bruno+Ace&family=Gugi&display=swap" rel="stylesheet">
+
 </head>
+  
 <body>
-    <h1>H1태그</h1>
-    <h2>H2태그</h2>
-    <h3>H3태그</h3>
-
-    <div>div-영역을 갖춤</div>
-    <div>div-영역을 갖춤2</div>
-
-    <p>긴 문장을 쓸 때 이용되는 p태그</p>
-    <p>긴 문장을 쓸 때 <span style="color:palevioletred">span태그도 이용해서</span>
-    작성이 가능하다.</p>
-
-    <ul>
-        <li>순서가 없는 항목 1</li>
-        <li>순서가 없는 항목 2</li>
-    </ul>
-    <hr/>
-
-    <input type="text"/>
-    <input type="number"/>
-    <button>PRESS BUTTON</button>
-
-    <br/>
-    <br/>
-    <img src="nightview.png" width="200"/>
+    <!--Add Jquery-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     
+    <!--Navbar-->
+   <nav class="navbar" style="background-color: #e3f2fd;">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">
+            <img src="https://images.unsplash.com/photo-1721332155545-c7a8005a2581?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
+            간편 영화 리뷰
+          </a>
+        </div>
+      </nav>
+    
+    <!--Container-->
+    <div class="container">
+        <div class="h-100 p-5 text-bg-dark rounded-3">
+            <h2>인기/최신 영화에 한마디씩</h2>
+            <p>
+                어떤 영화를 좋아하나요? 어떤 영화를 보고싶나요?<br>
+                아직 정하지 못했다면 하단의 리뷰를 참고해보세요!
+            </p>
+            <button class="btn btn-outline-light" type="button">
+                Example button
+            </button>
+        </div>
+    </div>
+
+    <!--Card Layout-->
+    <div class="row row-cols-1 row-cols-md-3 g-4" id="review-list">
+        <div class="col">
+            <div class="card">
+                <img src="..." class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">어떤 영화1</h5>
+                    <button type="button" class="btn btn-dark" id="review-button" onclick="review()">리뷰 보기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Modal Window-->
+    <div class="modal" id="review-modal" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Modal title</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p>Modal body text goes here.</p>
+            </div>
+            <div class="modal-footer">
+              <input type="text" class="form-control" id="review" style="width:70%"/>
+              <button type="button" class="btn btn-primary" onclick="addReview()">후기 작성</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
 </body>
+
+<!--js script-->
+<script>
+
+    $(document).ready(function(){
+        console.log("hello!");
+
+        $.ajax({
+
+            url: "https://api.themoviedb.org/3/movie/popular?api_key=552d2415f7fd3cf8e09c7f4baa85963b&language=ko-KR&page=1",
+            data: {},
+            type: "GET",
+            success: function (json) {
+                console.log(json)
+
+                $("#review-list").html('');
+
+                let movie_list = json.results;
+
+                for (let i = 0; i < movie_list.length; i++) {
+
+                    let card = `<div class="col">
+                        <div class="card">
+                            <img src=${"https://1E5baAaEse26fej7uHcjOgEE2t2.jpg"+movie_list[i].poster_path} class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">${movie_list[i].original_title}</h5>
+                                    <button type="button" class="btn btn-dark" id="review-button" onclick="review()">리뷰 보기</button>
+                                </div>
+                        </div>
+                    </div>`
+
+                    $("#review-list").append(card);
+                }
+            },
+
+            error: function (err) {
+                console.log("fail")
+            }
+
+        })
+    })
+</script>
 </html>
